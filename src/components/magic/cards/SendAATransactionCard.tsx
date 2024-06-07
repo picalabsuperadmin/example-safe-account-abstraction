@@ -6,8 +6,6 @@ import ErrorText from "@/components/ui/ErrorText";
 import Card from "@/components/ui/Card";
 import CardHeader from "@/components/ui/CardHeader";
 import { getFaucetUrl, getNetworkToken } from "@/utils/network";
-import Spacer from "@/components/ui/Spacer";
-import TransactionHistory from "@/components/ui/TransactionHistory";
 import Image from "next/image";
 import Link from "public/link.svg";
 import { useSafeProvider } from "@/components/safe/useSafeProvider";
