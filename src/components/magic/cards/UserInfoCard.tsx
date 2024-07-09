@@ -117,7 +117,7 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
           {magicAddress?.length == 0 ? "Fetching address.." : magicAddress}
         </div>
         <div className="code">
-          Smart Contract Wallet:{" "}
+          Safe Smart Account:{" "}
           {scaAddress?.length == 0 ? "Fetching address.." : scaAddress}
         </div>
       </div>
@@ -139,7 +139,7 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
           Magic Balance: {magicBalance.substring(0, 7)} {getNetworkToken()}
         </div>
         <div className="code">
-          Smart Account Balance: {scaBalance.substring(0, 7)}{" "}
+          Safe Smart Account Balance: {scaBalance.substring(0, 7)}{" "}
           {getNetworkToken()}
         </div>
       </div>

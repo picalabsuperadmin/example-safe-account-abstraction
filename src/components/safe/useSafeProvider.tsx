@@ -7,7 +7,7 @@ import {
   createSmartAccountClient,
 } from "permissionless";
 import { signerToSafeSmartAccount } from "permissionless/accounts";
-import { createPimlicoBundlerClient } from "permissionless/clients/pimlico";
+import { createPimlicoBundlerClient, createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
 import { http } from "viem";
 import { sepolia } from "viem/chains";
 import { ENTRYPOINT_ADDRESS_V07_TYPE } from "permissionless/_types/types";
@@ -29,6 +29,11 @@ export const useSafeProvider = () => {
       entryPoint: ENTRYPOINT_ADDRESS_V07,
     });
 
+    const paymasterClient = createPimlicoPaymasterClient({
+      transport: http(`https://api.pimlico.io/v2/sepolia/rpc?apikey=${process.env.NEXT_PUBLIC_PIMLICO_API_KEY}`),
+      entryPoint: ENTRYPOINT_ADDRESS_V07,
+    })
+
     const pimlicoBundlerClient = createPimlicoBundlerClient({
       transport: http(`https://api.pimlico.io/v1/sepolia/rpc?apikey=${process.env.NEXT_PUBLIC_PIMLICO_API_KEY}`),
       entryPoint: ENTRYPOINT_ADDRESS_V07,
@@ -40,6 +45,7 @@ export const useSafeProvider = () => {
       chain: sepolia,
       bundlerTransport: http(`https://api.pimlico.io/v1/sepolia/rpc?apikey=${process.env.NEXT_PUBLIC_PIMLICO_API_KEY}`),
       middleware: {
+        sponsorUserOperation: paymasterClient.sponsorUserOperation,
         gasPrice: async () =>
           (await pimlicoBundlerClient.getUserOperationGasPrice()).standard, // if using pimlico bundler
       },
