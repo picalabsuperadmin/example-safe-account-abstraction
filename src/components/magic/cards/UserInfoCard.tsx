@@ -48,7 +48,7 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
 
   const getSmartContractAccount = useCallback(async () => {
     if (smartClient) {
-      const address = smartClient.account?.address;
+      const address = await smartClient.protocolKit.getAddress()
       setScaAddress(address);
     }
   }, [smartClient]);

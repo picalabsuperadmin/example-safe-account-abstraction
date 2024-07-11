@@ -28,7 +28,7 @@ const SendAATransaction = () => {
   }, [amount, toAddress]);
 
   const sendTransaction = useCallback(async () => {
-    if (!smartClient || !smartClient.account) return;
+    if (!smartClient) return;
 
     if (!isAddress(toAddress)) {
       return setToAddressError(true);
@@ -38,22 +38,39 @@ const SendAATransaction = () => {
     }
     setDisabled(true);
 
-    // @ts-ignore
-    const result = await smartClient.sendTransaction({
+    const transaction = {
       to: toAddress,
-      value: parseEther(amount),
+      value: parseEther(amount).toString(),
+      data: '0x'
+    };
+
+    const transactions = [transaction];
+
+    const safeOperation = await smartClient.createTransaction({ transactions })
+    const signedSafeOperation = await smartClient.signSafeOperation(safeOperation);
+    const userOperationHash = await smartClient.executeTransaction({
+      executable: signedSafeOperation
     });
 
-    if (result) {
+    let userOperationReceipt = null;
+
+    // Poll for the transaction receipt
+    while (!userOperationReceipt) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      userOperationReceipt = await smartClient.getUserOperationReceipt(userOperationHash);
+    }
+
+    console.log('Transaction successful:', userOperationReceipt);
+    if (userOperationReceipt) {
       setToAddress("");
       setAmount("");
-      console.log("Transaction hash:", result);
+      console.log("Transaction hash:", userOperationReceipt);
       showToast({
         message: "Transaction Successful.",
         type: "success",
       });
-      setHash(result);
-      console.log("UserOp Transaction receipt:", result);
+      setHash(userOperationReceipt);
+      console.log("UserOp Transaction receipt:", userOperationReceipt);
     }
     setDisabled(false);
   }, [smartClient, amount, toAddress]);
