@@ -54,7 +54,6 @@ const SendAATransaction = () => {
 
     let userOperationReceipt = null;
 
-    // Poll for the transaction receipt
     while (!userOperationReceipt) {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       userOperationReceipt = await smartClient.getUserOperationReceipt(userOperationHash);
