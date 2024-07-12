@@ -12,7 +12,7 @@ import { useSafeProvider } from "@/components/safe/useSafeProvider";
 import { isAddress, parseEther } from "viem";
 import showToast from "@/utils/showToast";
 
-const SendAATransaction = () => {
+const SendSafeTransaction = () => {
   const { smartClient } = useSafeProvider();
   const [toAddress, setToAddress] = useState("");
   const [amount, setAmount] = useState("");
@@ -76,7 +76,7 @@ const SendAATransaction = () => {
 
   return (
     <Card>
-      <CardHeader id="send-transaction">Send AA Transaction</CardHeader>
+      <CardHeader id="send-transaction">Send Safe Transaction</CardHeader>
       {getFaucetUrl() && (
         <div>
           <a href={getFaucetUrl()} target="_blank" rel="noreferrer">
@@ -112,4 +112,4 @@ const SendAATransaction = () => {
   );
 };
 
-export default SendAATransaction;
+export default SendSafeTransaction;
