@@ -6,7 +6,7 @@ import { LoginProps } from '@/utils/types';
 import UserInfo from './cards/UserInfoCard';
 import DevLinks from './DevLinks';
 import Header from './Header';
-import SendAATransaction from './cards/SendAATransactionCard';
+import SendSafeTransaction from './cards/SendSafeTransactionCard';
 
 export default function Dashboard({ token, setToken }: LoginProps) {
   return (
@@ -17,7 +17,7 @@ export default function Dashboard({ token, setToken }: LoginProps) {
         <Spacer size={10} />
         <SendTransaction />
         <Spacer size={10} />
-        <SendAATransaction />
+        <SendSafeTransaction />
         <Spacer size={10} />
         <WalletMethods token={token} setToken={setToken} />
         <Spacer size={15} />

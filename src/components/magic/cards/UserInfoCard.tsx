@@ -17,11 +17,9 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
   const [copied, setCopied] = useState('Copy');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [magicBalance, setMagicBalance] = useState<string>("...");
-  const [scaBalance, setScaBalance] = useState<string>("...");
-  const [scaAddress, setScaAddress] = useState<string | undefined>("");
+  const [safeBalance, setSafeBalance] = useState<string>("...");
+  const [safeAddress, setSafeAddress] = useState<string | undefined>("");
   const [magicAddress] = useState(localStorage.getItem("user"));
-
-  const [publicAddress] = useState(localStorage.getItem('user'));
 
   const getBalance = useCallback(async () => {
     if (magicAddress && publicClient) {
@@ -34,22 +32,20 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
         setMagicBalance(formatEther(magicBalance));
       }
     }
-    if (scaAddress && publicClient) {
-      const aaBalance = await publicClient?.getBalance({
-        address: scaAddress as `0x${string}`,
-      });
-      if (aaBalance == BigInt(0)) {
-        setScaBalance("0");
+    if (safeAddress && smartClient) {
+      const safeBalance = await smartClient?.protocolKit.getBalance();
+      if (safeBalance == BigInt(0)) {
+        setSafeBalance("0");
       } else {
-        setScaBalance(formatEther(aaBalance));
+        setSafeBalance(formatEther(safeBalance));
       }
     }
-  }, [scaAddress, magicAddress, publicClient]);
+  }, [safeAddress, magicAddress, publicClient]);
 
   const getSmartContractAccount = useCallback(async () => {
     if (smartClient) {
-      const address = smartClient.account?.address;
-      setScaAddress(address);
+      const address = await smartClient.protocolKit.getAddress();
+      setSafeAddress(address);
     }
   }, [smartClient]);
 
@@ -73,7 +69,7 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
 
   useEffect(() => {
     setMagicBalance("...");
-    setScaBalance("...");
+    setSafeBalance("...");
   }, [magic]);
 
   const disconnect = useCallback(async () => {
@@ -83,14 +79,14 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
   }, [magic, setToken]);
 
   const copy = useCallback(() => {
-    if (publicAddress && copied === 'Copy') {
+    if (magicAddress && copied === 'Copy') {
       setCopied('Copied!');
-      navigator.clipboard.writeText(publicAddress);
+      navigator.clipboard.writeText(magicAddress);
       setTimeout(() => {
         setCopied('Copy');
       }, 1000);
     }
-  }, [copied, publicAddress]);
+  }, [copied, magicAddress]);
 
   return (
     <Card>
@@ -117,8 +113,8 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
           {magicAddress?.length == 0 ? "Fetching address.." : magicAddress}
         </div>
         <div className="code">
-          Smart Contract Wallet:{" "}
-          {scaAddress?.length == 0 ? "Fetching address.." : scaAddress}
+          Safe Smart Account:{" "}
+          {safeAddress?.length == 0 ? "Fetching address.." : safeAddress}
         </div>
       </div>
       <Divider />
@@ -139,7 +135,7 @@ const UserInfo = ({ token, setToken }: LoginProps) => {
           Magic Balance: {magicBalance.substring(0, 7)} {getNetworkToken()}
         </div>
         <div className="code">
-          Smart Account Balance: {scaBalance.substring(0, 7)}{" "}
+          Safe Smart Account Balance: {safeBalance.substring(0, 7)}{" "}
           {getNetworkToken()}
         </div>
       </div>
