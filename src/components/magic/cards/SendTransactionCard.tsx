@@ -12,6 +12,7 @@ import Spacer from '@/components/ui/Spacer';
 import TransactionHistory from '@/components/ui/TransactionHistory';
 import Image from 'next/image';
 import Link from 'public/link.svg';
+import { TransactionReceipt } from 'web3-core';
 
 const SendTransaction = () => {
   const { web3 } = useMagic();
@@ -46,11 +47,11 @@ const SendTransaction = () => {
     };
     web3.eth
       .sendTransaction(txnParams as any)
-      .on('transactionHash', (txHash: string) => {
+      .on('transactionHash', (txHash: string) => {  // 显式指定 txHash 类型为 string
         setHash(txHash);
         console.log('Transaction hash:', txHash);
       })
-      .then((receipt) => {
+      .then((receipt: TransactionReceipt) => {  // 显式指定 receipt 类型为 TransactionReceipt
         showToast({
           message: 'Transaction Successful',
           type: 'success',
@@ -82,13 +83,13 @@ const SendTransaction = () => {
 
       <FormInput
         value={toAddress}
-        onChange={(e: any) => setToAddress(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setToAddress(e.target.value)}  // 修正事件类型
         placeholder="Receiving Address"
       />
       {toAddressError ? <ErrorText>Invalid address</ErrorText> : null}
       <FormInput
         value={amount}
-        onChange={(e: any) => setAmount(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}  // 修正事件类型
         placeholder={`Amount (${getNetworkToken()})`}
       />
       {amountError ? <ErrorText className="error">Invalid amount</ErrorText> : null}
