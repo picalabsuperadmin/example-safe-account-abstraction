@@ -60,7 +60,7 @@ const SendTransaction = () => {
         setAmount('');
         console.log('Transaction receipt:', receipt);
       })
-      .catch((error) => {
+      .catch((error:Error) => {
         console.error(error);
         setDisabled(false);
       });
