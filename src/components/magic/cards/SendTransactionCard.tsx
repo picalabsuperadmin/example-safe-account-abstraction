@@ -46,7 +46,7 @@ const SendTransaction = () => {
     };
     web3.eth
       .sendTransaction(txnParams as any)
-      .on('transactionHash', (txHash) => {
+      .on('transactionHash', (txHash: string) => {
         setHash(txHash);
         console.log('Transaction hash:', txHash);
       })
